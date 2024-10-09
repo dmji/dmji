@@ -3,8 +3,6 @@
 
 name: Go
 
-uses: actions/checkout@v4.2.1
-
 on:
   push:
     branches: ["master"]
