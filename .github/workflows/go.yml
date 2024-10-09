@@ -3,26 +3,47 @@
 
 name: Go
 
+uses: actions/checkout@v4.2.1
+
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
-
   build:
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.1
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.20'
+      - name: Set up Go
+        uses: actions/setup-go@v5.0.2
+        with:
+          go-version: "1.23.1"
 
-    - name: Build
-      run: go build -v ./...
+      - name: Generate
+        run: go run -v ./...
 
-    - name: Generate
-      run: go run -v ./...
+      - name: Upload pages artifact
+        uses: actions/upload-artifact@v3.0.1
+        with:
+          name: index.html
+          path: www
+
+      # Deploy Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4.0.5
+        with:
+          branch: master # Replace with your deployment branch
+          folder: www # Replace with the folder containing your site files
