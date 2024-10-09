@@ -36,11 +36,11 @@ jobs:
         run: go run -v ./...
 
       - name: Upload pages artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v4
         with:
           name: github-pages
           path: "_site/"
 
       # Deploy Pages
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4.0.5
+        uses: actions/deploy-pages@v4
