@@ -34,7 +34,7 @@ jobs:
         run: go run -v ./...
 
       - name: Upload pages artifact
-        uses: actions/upload-artifact@v3.0.1
+        uses: actions/upload-artifact@4
         with:
           name: index.html
           path: www
