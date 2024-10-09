@@ -34,7 +34,7 @@ jobs:
         run: go run -v ./...
 
       - name: Upload pages artifact
-        uses: actions/upload-artifact@4
+        uses: actions/upload-artifact@v4
         with:
           name: index.html
           path: www
@@ -42,6 +42,3 @@ jobs:
       # Deploy Pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4.0.5
-        with:
-          branch: master # Replace with your deployment branch
-          folder: www # Replace with the folder containing your site files
