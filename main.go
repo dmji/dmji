@@ -1,6 +1,10 @@
 package main
 
-import "os"
+import (
+	"io"
+	"net/http"
+	"os"
+)
 
 func exists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -18,5 +22,17 @@ func main() {
 		os.Mkdir("_site", 0700)
 	}
 
-	os.WriteFile("_site/index.html", []byte("Hello from actions!"), 0644)
+	resp, err := http.Get("https://animelayer.ru/")
+
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+
+	os.WriteFile("_site/index.html", bodyBytes, 0644)
 }
