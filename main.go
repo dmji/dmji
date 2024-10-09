@@ -19,4 +19,5 @@ func main() {
 	}
 
 	os.WriteFile("www/index.html", []byte("Hello from actions!"), 0644)
+	os.WriteFile("www/hello.html", []byte("Hello from actions 2!"), 0644)
 }
