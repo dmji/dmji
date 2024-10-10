@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -23,6 +24,12 @@ func exists(path string) (bool, error) {
 }
 
 func main() {
+	telegramToken := os.Getenv("TELEGRAM_BOT_TOKEN")
+	telegramIdChan := os.Getenv("TELEGRAM_ID_CHAN")
+
+	log.Print(len(telegramToken))
+	log.Print(len(telegramIdChan))
+
 	if ok, _ := exists("_site"); !ok {
 		os.Mkdir("_site", 0700)
 	}
@@ -46,7 +53,7 @@ func main() {
 
 	opts := []bot.Option{}
 
-	b, err := bot.New(os.Getenv("TELEGRAM_BOT_TOKEN"), opts...)
+	b, err := bot.New(telegramToken, opts...)
 	if nil != err {
 		// panics for the sake of simplicity.
 		// you should handle this error properly in your code.
@@ -54,7 +61,7 @@ func main() {
 	}
 
 	params := &bot.SendMessageParams{
-		ChatID: os.Getenv("TELEGRAM_ID_CHAN"),
+		ChatID: telegramIdChan,
 		Text:   time.Now().String(),
 	}
 
