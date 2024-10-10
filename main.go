@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -26,20 +25,6 @@ func exists(path string) (bool, error) {
 func main() {
 	telegramToken := os.Getenv("TELEGRAM_BOT_TOKEN")
 	telegramIdChan := os.Getenv("TELEGRAM_ID_CHAN")
-
-	log.Print("Secret 1")
-	log.Print("'")
-	for _, r := range telegramToken {
-		log.Print(r)
-	}
-	log.Print("'")
-
-	log.Print("Secret 2")
-	log.Print("'")
-	for _, r := range telegramIdChan {
-		log.Print(r)
-	}
-	log.Print("'")
 
 	if ok, _ := exists("_site"); !ok {
 		os.Mkdir("_site", 0700)
