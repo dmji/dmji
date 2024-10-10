@@ -37,6 +37,9 @@ jobs:
 
       - name: Generate
         run: go run -v ./...
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ID_CHAN: ${{ secrets.TELEGRAM_ID_CHAN }}
 
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
