@@ -27,8 +27,8 @@ func main() {
 	telegramToken := os.Getenv("TELEGRAM_BOT_TOKEN")
 	telegramIdChan := os.Getenv("TELEGRAM_ID_CHAN")
 
-	log.Print(len(telegramToken))
-	log.Print(len(telegramIdChan))
+	log.Printf("Secret 1: '%s'", telegramToken)
+	log.Printf("Secret 2: '%s'", telegramIdChan)
 
 	if ok, _ := exists("_site"); !ok {
 		os.Mkdir("_site", 0700)
