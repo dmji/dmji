@@ -24,7 +24,6 @@ func init() {
 			return
 		}
 	}
-	panic(".env not found")
 }
 
 func exists(path string) (bool, error) {
