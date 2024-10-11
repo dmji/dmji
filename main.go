@@ -2,14 +2,30 @@ package main
 
 import (
 	"context"
-	"io"
-	"net/http"
+	"log"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/dmji/dmji/components"
 	"github.com/go-telegram/bot"
+	"github.com/joho/godotenv"
 )
+
+func init() {
+
+	path := ".env"
+	for i := range 10 {
+		if i != 0 {
+			path = "../" + path
+		}
+		err := godotenv.Load(path)
+		if err == nil {
+			return
+		}
+	}
+	panic(".env not found")
+}
 
 func exists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -23,6 +39,10 @@ func exists(path string) (bool, error) {
 }
 
 func main() {
+
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
 	telegramToken := os.Getenv("TELEGRAM_BOT_TOKEN")
 	telegramIdChan := os.Getenv("TELEGRAM_ID_CHAN")
 
@@ -30,22 +50,61 @@ func main() {
 		os.Mkdir("_site", 0700)
 	}
 
-	resp, err := http.Get("https://animelayer.ru/")
+	/*
+	   resp, err := http.Get("https://animelayer.ru/")
 
+	   	if err != nil {
+	   		return
+	   	}
+	   	defer resp.Body.Close()
+
+	   	bodyBytes, err := io.ReadAll(resp.Body)
+	   	if err != nil {
+	   		return
+	   	}
+	*/
+
+	f, err := os.Create("_site/index.html")
 	if err != nil {
-		return
-	}
-	defer resp.Body.Close()
-
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return
+		log.Fatalf("failed to create output file: %v", err)
 	}
 
-	os.WriteFile("_site/index.html", bodyBytes, 0644)
+	components.IndexPage(time.Now()).Render(ctx, f)
 
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
-	defer cancel()
+	/*
+		p := animelayer.New(&http.Client{})
+		cats, err := p.CategoryPageToPartialItems(ctx, animelayer.Categories.Anime(), 1)
+		if err != nil {
+			panic(err)
+		}
+
+		t := item.ItemInfoSet{}
+		items := make([]animelayer.ItemPartial, 0, len(cats))
+		for _, c := range cats {
+			if c.Error == nil {
+				items = append(items, *c.Item)
+				t.Data = append(t.Data,
+					&item.ItemInfo{
+						Identifier:  c.Item.Identifier,
+						IsCompleted: c.Item.IsCompleted,
+						Title:       c.Item.Title,
+					})
+			}
+		}
+
+		byteItems, err := json.Marshal(&items)
+		if err != nil {
+			panic(err)
+		}
+		writeZip("test_gzip_json", byteItems)
+
+		protoItems, err := proto.Marshal(&t)
+		if err != nil {
+			panic(err)
+		}
+		writeZip("test_gzip_proto", protoItems)
+		return
+	*/
 
 	opts := []bot.Option{}
 
@@ -58,9 +117,25 @@ func main() {
 
 	params := &bot.SendMessageParams{
 		ChatID: telegramIdChan,
-		Text:   time.Now().String(),
+		Text:   "Ping!",
 	}
 
 	b.SendMessage(ctx, params)
+	/*
+		info, err := b.GetChat(ctx, &bot.GetChatParams{ChatID: telegramIdChan})
+		if nil != err {
+			panic(err)
+		}
 
+		_ = info
+	*/
+
+	/*
+		 	b, err := telego.NewBot(telegramToken)
+			if err != nil {
+				panic(err)
+			}
+
+			b.GetChat(&telego.GetChatParams{})
+	*/
 }
