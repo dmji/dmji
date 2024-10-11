@@ -27,7 +27,7 @@ jobs:
         with:
           sparse-checkout: bin
       - name: Generate
-        run: ./dmji
+        run: ./bin/dmji
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_ID_CHAN: ${{ secrets.TELEGRAM_ID_CHAN }}
